@@ -14,17 +14,17 @@
 
         <div class="mb-3">
             <label>Total Hadir</label>
-            <input type="number" class="form-control" value="<?= $gaji->total_hadir ?>" readonly>
+            <input type="number" class="form-control" value="<?= $absen->total_hadir ?>" readonly>
         </div>
 
         <div class="mb-3">
             <label>Izin</label>
-            <input type="number" class="form-control" value="<?= $gaji->total_izin ?>" readonly>
+            <input type="number" class="form-control" value="<?= $absen->total_izin ?>" readonly>
         </div>
 
         <div class="mb-3">
             <label>Telat</label>
-            <input type="number" class="form-control" value="<?= $gaji->total_telat ?>" readonly>
+            <input type="number" class="form-control" value="<?= $absen->total_telat ?>" readonly>
         </div>
 
         <div class="mb-3">

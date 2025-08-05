@@ -6,7 +6,25 @@
     <?php endif; ?>
 
     <div class="mb-3">
-        <a href="<?= site_url('gaji/rekap_otomatis') ?>" class="btn btn-primary">+ Rekap Otomatis</a>
+    <a href="<?= site_url('gaji/rekap_otomatis?start_date=' . $this->input->get('start_date') . '&end_date=' . $this->input->get('end_date')) ?>" class="btn btn-primary">+ Rekap Otomatis</a>
+</div>
+
+    <div class="mb-4 p-3 bg-light rounded shadow-sm">
+        <form action="<?= site_url('gaji') ?>" method="get">
+            <div class="row">
+                <div class="col-md-5">
+                    <label for="start_date">Dari Tanggal:</label>
+                    <input type="date" name="start_date" id="start_date" class="form-control" value="<?= $this->input->get('start_date') ?>">
+                </div>
+                <div class="col-md-5">
+                    <label for="end_date">Sampai Tanggal:</label>
+                    <input type="date" name="end_date" id="end_date" class="form-control" value="<?= $this->input->get('end_date') ?>">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-info btn-block">Filter</button>
+                </div>
+            </div>
+        </form>
     </div>
 
     <div class="table-responsive">
@@ -35,7 +53,7 @@
                         <td><?= $row->nama ?></td>
                         <td><?= $row->bulan ?></td>
                         <td><?= $row->total_izin ?></td>
-                        <td><?= $row->total_sakit ?? 0 ?></td>
+                        <td><?= $row->sakit ?? 0 ?></td>
                         <td><?= $row->total_telat ?></td>
                         <td><?= number_format($row->insentif ?? 0, 0, ',', '.') ?></td>
                         <td><?= number_format($row->total_tambahan ?? 0, 0, ',', '.') ?></td>

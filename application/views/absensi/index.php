@@ -1,15 +1,6 @@
 <div class="container mt-4">
     <h3 class="mb-3"><?= $title ?></h3>
 
-    <form method="get" class="form-inline mb-3">
-    <label for="start_date">Dari Tanggal:</label>
-    <input type="date" name="start_date" id="start_date" class="form-control mx-2" value="<?= $this->input->get('start_date') ?>">
-    
-    <label for="end_date">Sampai Tanggal:</label>
-    <input type="date" name="end_date" id="end_date" class="form-control mx-2" value="<?= $this->input->get('end_date') ?>">
-    
-    <button type="submit" class="btn btn-primary">Filter</button>
-</form>
     <?php if ($this->session->flashdata('success')): ?>
         <div class="alert alert-success"><?= $this->session->flashdata('success') ?></div>
     <?php endif; ?>
@@ -17,6 +8,20 @@
     <?php if ($this->session->flashdata('warning')): ?>
         <div class="alert alert-warning"><?= $this->session->flashdata('warning') ?></div>
     <?php endif; ?>
+
+    <div class="mb-3">
+        <a href="<?= site_url('absensi/upload') ?>" class="btn btn-success">Import Absensi</a>
+    </div>
+
+    <form method="get" class="form-inline mb-3">
+        <label for="start_date">Dari Tanggal:</label>
+        <input type="date" name="start_date" id="start_date" class="form-control mx-2" value="<?= $this->input->get('start_date') ?>">
+        
+        <label for="end_date">Sampai Tanggal:</label>
+        <input type="date" name="end_date" id="end_date" class="form-control mx-2" value="<?= $this->input->get('end_date') ?>">
+        
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
 
     <table class="table table-bordered table-striped">
         <thead class="thead-dark">
