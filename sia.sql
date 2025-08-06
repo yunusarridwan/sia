@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 04, 2025 at 05:06 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- Waktu pembuatan: 05 Agu 2025 pada 18.42
+-- Versi server: 10.4.28-MariaDB
+-- Versi PHP: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `absensi`
+-- Struktur dari tabel `absensi`
 --
 
 CREATE TABLE `absensi` (
@@ -37,7 +37,7 @@ CREATE TABLE `absensi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `absensi`
+-- Dumping data untuk tabel `absensi`
 --
 
 INSERT INTO `absensi` (`id`, `karyawan_id`, `tanggal`, `jam_masuk`, `status`, `created_at`) VALUES
@@ -415,26 +415,28 @@ INSERT INTO `absensi` (`id`, `karyawan_id`, `tanggal`, `jam_masuk`, `status`, `c
 (372, 265, '2025-07-14', '09:00:00', 'hadir', '2025-08-01 12:59:39'),
 (373, 265, '2025-07-15', '09:12:00', 'hadir', '2025-08-01 12:59:39'),
 (374, 265, '2025-07-16', '10:23:00', 'telat', '2025-08-01 12:59:39'),
-(375, 265, '2025-06-20', '09:17:00', 'telat', '2025-08-01 12:59:39');
+(375, 265, '2025-06-20', '09:17:00', 'telat', '2025-08-01 12:59:39'),
+(376, 100, '2025-06-20', '09:17:00', 'telat', '2025-08-05 10:56:29'),
+(377, 265, '2025-07-17', '09:12:00', 'hadir', '2025-08-05 10:56:29');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `cash_advance`
+-- Struktur dari tabel `cash_advance`
 --
 
 CREATE TABLE `cash_advance` (
   `id` int(11) NOT NULL,
-  `id_karyawan` int(11) DEFAULT NULL,
-  `tanggal` date DEFAULT NULL,
-  `jumlah` int(11) DEFAULT NULL,
+  `karyawan_id` varchar(50) NOT NULL,
+  `tanggal` date NOT NULL,
+  `jumlah` int(11) NOT NULL,
   `keterangan` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fixed_variable_cost`
+-- Struktur dari tabel `fixed_variable_cost`
 --
 
 CREATE TABLE `fixed_variable_cost` (
@@ -449,7 +451,7 @@ CREATE TABLE `fixed_variable_cost` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `fixed_variable_cost`
+-- Dumping data untuk tabel `fixed_variable_cost`
 --
 
 INSERT INTO `fixed_variable_cost` (`id`, `bulan`, `tanggal`, `kategori`, `keterangan`, `nominal`, `source`, `id_pettycash`) VALUES
@@ -460,7 +462,7 @@ INSERT INTO `fixed_variable_cost` (`id`, `bulan`, `tanggal`, `kategori`, `ketera
 -- --------------------------------------------------------
 
 --
--- Table structure for table `gaji`
+-- Struktur dari tabel `gaji`
 --
 
 CREATE TABLE `gaji` (
@@ -483,25 +485,35 @@ CREATE TABLE `gaji` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `gaji`
+-- Dumping data untuk tabel `gaji`
 --
 
 INSERT INTO `gaji` (`id`, `karyawan_id`, `nama`, `jabatan`, `bulan`, `total_telat`, `sakit`, `total_izin`, `gaji_pokok`, `insentif_marketing`, `insentif`, `total_tambahan`, `potongan_absen`, `total_potongan`, `total_gaji`, `tanggal_dibuat`) VALUES
-(1, '5', 'Idharul Huda', 'Kacab', '2025-08', 0, 0, 0, 15000000.00, 0.00, 0.00, 0.00, 0, 0, 15000000.00, '2025-08-04 10:46:32'),
-(2, '6', 'Retno Indrawardani', 'AMM', '2025-08', 0, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 0, 0, 7000000.00, '2025-08-04 10:46:32'),
-(3, '7', 'Muhammad Ilham', 'OB', '2025-08', 0, 0, 0, 4000000.00, 0.00, 0.00, 0.00, 0, 0, 4000000.00, '2025-08-04 10:46:32'),
-(4, '8', 'Rani Agisviane', 'AMM', '2025-08', 0, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 0, 0, 7000000.00, '2025-08-04 10:46:32'),
-(5, '9', 'Rina Sally Stevani', 'BM', '2025-08', 0, 0, 0, 10000000.00, 0.00, 0.00, 0.00, 0, 0, 10000000.00, '2025-08-04 10:46:32'),
-(6, '10', 'Dwi nofa ramdani', 'Admin', '2025-08', 0, 0, 0, 5000000.00, 0.00, 0.00, 0.00, 0, 0, 5000000.00, '2025-08-04 10:46:32'),
-(7, '11', 'Ralda Thalia Andi Roy', 'AMM', '2025-08', 0, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 0, 0, 7000000.00, '2025-08-04 10:46:32'),
-(8, '12', 'Harry Damara Prastyo', 'BM', '2025-08', 0, 0, 0, 10000000.00, 0.00, 0.00, 0.00, 0, 0, 10000000.00, '2025-08-04 10:46:32'),
-(9, '13', 'Ahmuy', 'AMM', '2025-08', 0, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 0, 0, 7000000.00, '2025-08-04 10:46:32'),
-(10, '14', 'Intan revarivera', 'AE', '2025-08', 0, 0, 0, 3000000.00, 0.00, 0.00, 0.00, 0, 0, 3000000.00, '2025-08-04 10:46:32');
+(121, '100', '', '', '2025-06', 1, 0, 0, 15000000.00, 0.00, 0.00, 0.00, 50000, 50000, 14950000.00, '2025-08-05 07:46:00'),
+(122, '105', '', '', '2025-06', 0, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 0, 0, 7000000.00, '2025-08-05 07:46:00'),
+(123, '107', '', '', '2025-06', 6, 0, 0, 4000000.00, 0.00, 0.00, 0.00, 300000, 300000, 3700000.00, '2025-08-05 07:46:00'),
+(124, '125', '', '', '2025-06', 5, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 250000, 250000, 6750000.00, '2025-08-05 07:46:00'),
+(125, '136', '', '', '2025-06', 3, 0, 0, 10000000.00, 0.00, 0.00, 0.00, 150000, 150000, 9850000.00, '2025-08-05 07:46:00'),
+(126, '151', '', '', '2025-06', 2, 0, 0, 5000000.00, 0.00, 0.00, 0.00, 100000, 100000, 4900000.00, '2025-08-05 07:46:00'),
+(127, '167', '', '', '2025-06', 5, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 250000, 250000, 6750000.00, '2025-08-05 07:46:00'),
+(128, '178', '', '', '2025-06', 1, 0, 0, 10000000.00, 0.00, 0.00, 0.00, 50000, 50000, 9950000.00, '2025-08-05 07:46:00'),
+(129, '180', '', '', '2025-06', 4, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 200000, 200000, 6800000.00, '2025-08-05 07:46:00'),
+(130, '233', '', '', '2025-06', 1, 0, 0, 3000000.00, 0.00, 0.00, 0.00, 50000, 50000, 2950000.00, '2025-08-05 07:46:00'),
+(131, '100', '', '', '2025-07', 0, 0, 0, 15000000.00, 0.00, 0.00, 0.00, 0, 0, 15000000.00, '2025-08-05 07:46:00'),
+(132, '105', '', '', '2025-07', 3, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 150000, 150000, 6850000.00, '2025-08-05 07:46:00'),
+(133, '107', '', '', '2025-07', 14, 0, 0, 4000000.00, 0.00, 0.00, 0.00, 700000, 700000, 3300000.00, '2025-08-05 07:46:00'),
+(134, '125', '', '', '2025-07', 6, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 300000, 300000, 6700000.00, '2025-08-05 07:46:00'),
+(135, '136', '', '', '2025-07', 8, 0, 0, 10000000.00, 0.00, 0.00, 0.00, 400000, 400000, 9600000.00, '2025-08-05 07:46:00'),
+(136, '151', '', '', '2025-07', 4, 0, 0, 5000000.00, 0.00, 0.00, 0.00, 200000, 200000, 4800000.00, '2025-08-05 07:46:00'),
+(137, '167', '', '', '2025-07', 3, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 150000, 150000, 6850000.00, '2025-08-05 07:46:00'),
+(138, '178', '', '', '2025-07', 0, 0, 0, 10000000.00, 0.00, 0.00, 0.00, 0, 0, 10000000.00, '2025-08-05 07:46:00'),
+(139, '180', '', '', '2025-07', 6, 0, 0, 7000000.00, 0.00, 0.00, 0.00, 300000, 300000, 6700000.00, '2025-08-05 07:46:00'),
+(140, '233', '', '', '2025-07', 3, 0, 0, 3000000.00, 0.00, 0.00, 0.00, 150000, 150000, 2850000.00, '2025-08-05 07:46:00');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `karyawan`
+-- Struktur dari tabel `karyawan`
 --
 
 CREATE TABLE `karyawan` (
@@ -517,7 +529,7 @@ CREATE TABLE `karyawan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `karyawan`
+-- Dumping data untuk tabel `karyawan`
 --
 
 INSERT INTO `karyawan` (`id`, `nama`, `jabatan`, `no_rekening`, `karyawan_id`, `gaji_pokok`, `status`, `tgl_masuk`, `tgl_resign`) VALUES
@@ -535,24 +547,24 @@ INSERT INTO `karyawan` (`id`, `nama`, `jabatan`, `no_rekening`, `karyawan_id`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `komisi`
+-- Struktur dari tabel `komisi`
 --
 
 CREATE TABLE `komisi` (
   `id` int(11) NOT NULL,
-  `tanggal` date DEFAULT NULL,
-  `id_karyawan` int(11) DEFAULT NULL,
-  `nama_nasabah` varchar(100) DEFAULT NULL,
-  `slot` decimal(10,2) DEFAULT NULL,
-  `rate_per_lot` int(11) DEFAULT NULL,
-  `total_komisi` int(11) DEFAULT NULL,
-  `kategori` enum('mini','reg') DEFAULT NULL
+  `karyawan_id` varchar(50) NOT NULL,
+  `tanggal` date NOT NULL,
+  `jenis` enum('Komisi','OR','Office') NOT NULL,
+  `tipe` enum('Mini','Reguler') NOT NULL,
+  `lot` decimal(10,2) NOT NULL,
+  `rupiah_per_lot` int(11) NOT NULL,
+  `total_amount` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `mutasi_kantor`
+-- Struktur dari tabel `mutasi_kantor`
 --
 
 CREATE TABLE `mutasi_kantor` (
@@ -564,7 +576,7 @@ CREATE TABLE `mutasi_kantor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `mutasi_kantor`
+-- Dumping data untuk tabel `mutasi_kantor`
 --
 
 INSERT INTO `mutasi_kantor` (`id`, `tanggal`, `jenis_pemasukan`, `nominal`, `keterangan`) VALUES
@@ -579,7 +591,7 @@ INSERT INTO `mutasi_kantor` (`id`, `tanggal`, `jenis_pemasukan`, `nominal`, `ket
 -- --------------------------------------------------------
 
 --
--- Table structure for table `net_margin`
+-- Struktur dari tabel `net_margin`
 --
 
 CREATE TABLE `net_margin` (
@@ -595,7 +607,7 @@ CREATE TABLE `net_margin` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pettycash`
+-- Struktur dari tabel `pettycash`
 --
 
 CREATE TABLE `pettycash` (
@@ -609,7 +621,7 @@ CREATE TABLE `pettycash` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `pettycash`
+-- Dumping data untuk tabel `pettycash`
 --
 
 INSERT INTO `pettycash` (`id`, `tanggal`, `kategori`, `keterangan`, `nominal`, `created_at`, `updated_at`) VALUES
@@ -678,7 +690,7 @@ INSERT INTO `pettycash` (`id`, `tanggal`, `kategori`, `keterangan`, `nominal`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rekap_laporan`
+-- Struktur dari tabel `rekap_laporan`
 --
 
 CREATE TABLE `rekap_laporan` (
@@ -691,7 +703,7 @@ CREATE TABLE `rekap_laporan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `rekap_laporan`
+-- Dumping data untuk tabel `rekap_laporan`
 --
 
 INSERT INTO `rekap_laporan` (`id`, `tanggal`, `bulan`, `total_pemasukan`, `total_pengeluaran`, `sisa_kas`) VALUES
@@ -700,7 +712,7 @@ INSERT INTO `rekap_laporan` (`id`, `tanggal`, `bulan`, `total_pemasukan`, `total
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rekap_lembur`
+-- Struktur dari tabel `rekap_lembur`
 --
 
 CREATE TABLE `rekap_lembur` (
@@ -715,7 +727,7 @@ CREATE TABLE `rekap_lembur` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `rekap_lembur`
+-- Dumping data untuk tabel `rekap_lembur`
 --
 
 INSERT INTO `rekap_lembur` (`id`, `karyawan_id`, `tanggal`, `jam_mulai`, `jam_selesai`, `tujuan`, `uang_makan`, `created_at`) VALUES
@@ -724,7 +736,7 @@ INSERT INTO `rekap_lembur` (`id`, `karyawan_id`, `tanggal`, `jam_mulai`, `jam_se
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Struktur dari tabel `users`
 --
 
 CREATE TABLE `users` (
@@ -736,7 +748,7 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data untuk tabel `users`
 --
 
 INSERT INTO `users` (`id`, `nama`, `username`, `password`, `role`) VALUES
@@ -748,175 +760,161 @@ INSERT INTO `users` (`id`, `nama`, `username`, `password`, `role`) VALUES
 --
 
 --
--- Indexes for table `absensi`
+-- Indeks untuk tabel `absensi`
 --
 ALTER TABLE `absensi`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `cash_advance`
+-- Indeks untuk tabel `cash_advance`
 --
 ALTER TABLE `cash_advance`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_karyawan` (`id_karyawan`);
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `fixed_variable_cost`
+-- Indeks untuk tabel `fixed_variable_cost`
 --
 ALTER TABLE `fixed_variable_cost`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `gaji`
+-- Indeks untuk tabel `gaji`
 --
 ALTER TABLE `gaji`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `karyawan`
+-- Indeks untuk tabel `karyawan`
 --
 ALTER TABLE `karyawan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `komisi`
+-- Indeks untuk tabel `komisi`
 --
 ALTER TABLE `komisi`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_karyawan` (`id_karyawan`);
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `mutasi_kantor`
+-- Indeks untuk tabel `mutasi_kantor`
 --
 ALTER TABLE `mutasi_kantor`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `net_margin`
+-- Indeks untuk tabel `net_margin`
 --
 ALTER TABLE `net_margin`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `pettycash`
+-- Indeks untuk tabel `pettycash`
 --
 ALTER TABLE `pettycash`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `rekap_laporan`
+-- Indeks untuk tabel `rekap_laporan`
 --
 ALTER TABLE `rekap_laporan`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `rekap_lembur`
+-- Indeks untuk tabel `rekap_lembur`
 --
 ALTER TABLE `rekap_lembur`
   ADD PRIMARY KEY (`id`),
   ADD KEY `pegawai_id` (`karyawan_id`);
 
 --
--- Indexes for table `users`
+-- Indeks untuk tabel `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `username` (`username`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT untuk tabel yang dibuang
 --
 
 --
--- AUTO_INCREMENT for table `absensi`
+-- AUTO_INCREMENT untuk tabel `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=376;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=378;
 
 --
--- AUTO_INCREMENT for table `cash_advance`
+-- AUTO_INCREMENT untuk tabel `cash_advance`
 --
 ALTER TABLE `cash_advance`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `fixed_variable_cost`
+-- AUTO_INCREMENT untuk tabel `fixed_variable_cost`
 --
 ALTER TABLE `fixed_variable_cost`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
--- AUTO_INCREMENT for table `gaji`
+-- AUTO_INCREMENT untuk tabel `gaji`
 --
 ALTER TABLE `gaji`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
 
 --
--- AUTO_INCREMENT for table `karyawan`
+-- AUTO_INCREMENT untuk tabel `karyawan`
 --
 ALTER TABLE `karyawan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
--- AUTO_INCREMENT for table `komisi`
+-- AUTO_INCREMENT untuk tabel `komisi`
 --
 ALTER TABLE `komisi`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `mutasi_kantor`
+-- AUTO_INCREMENT untuk tabel `mutasi_kantor`
 --
 ALTER TABLE `mutasi_kantor`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `net_margin`
+-- AUTO_INCREMENT untuk tabel `net_margin`
 --
 ALTER TABLE `net_margin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `pettycash`
+-- AUTO_INCREMENT untuk tabel `pettycash`
 --
 ALTER TABLE `pettycash`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
--- AUTO_INCREMENT for table `rekap_laporan`
+-- AUTO_INCREMENT untuk tabel `rekap_laporan`
 --
 ALTER TABLE `rekap_laporan`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `rekap_lembur`
+-- AUTO_INCREMENT untuk tabel `rekap_lembur`
 --
 ALTER TABLE `rekap_lembur`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- Constraints for dumped tables
+-- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
 --
 
 --
--- Constraints for table `cash_advance`
---
-ALTER TABLE `cash_advance`
-  ADD CONSTRAINT `cash_advance_ibfk_1` FOREIGN KEY (`id_karyawan`) REFERENCES `karyawan` (`id`);
-
---
--- Constraints for table `komisi`
---
-ALTER TABLE `komisi`
-  ADD CONSTRAINT `komisi_ibfk_1` FOREIGN KEY (`id_karyawan`) REFERENCES `karyawan` (`id`);
-
---
--- Constraints for table `rekap_lembur`
+-- Ketidakleluasaan untuk tabel `rekap_lembur`
 --
 ALTER TABLE `rekap_lembur`
   ADD CONSTRAINT `rekap_lembur_ibfk_1` FOREIGN KEY (`karyawan_id`) REFERENCES `karyawan` (`id`) ON DELETE CASCADE;

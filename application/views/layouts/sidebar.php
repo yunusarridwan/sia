@@ -52,7 +52,7 @@ $is_laporan_active  = in_array($uri, ['net_margin', 'rekap_laporan']) ? 'show' :
             </a>
             <div class="collapse ms-3 <?= $is_komisi_active ?>" id="menuKomisi">
                 <a class="nav-link <?= $uri == 'komisi' ? 'active' : '' ?>" href="<?= site_url('komisi') ?>">• Rekapan Komisi</a>
-                <a class="nav-link <?= $uri == 'komisi_office' ? 'active' : '' ?>" href="<?= site_url('komisi_office') ?>">• Cash Advance</a>
+                <a class="nav-link <?= $uri == 'komisi_office' ? 'active' : '' ?>" href="<?= site_url('cash_advance') ?>">• Cash Advance</a>
             </div>
         </li>
 

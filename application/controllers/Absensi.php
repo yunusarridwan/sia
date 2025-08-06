@@ -26,11 +26,6 @@ class Absensi extends CI_Controller {
 
         $start = $this->input->get('start_date');
         $end   = $this->input->get('end_date');
-        
-        // --- KODE DEBUGGING ---
-        echo "DEBUG: start_date dari filter: " . html_escape($start) . "<br>";
-        echo "DEBUG: end_date dari filter: " . html_escape($end) . "<br>";
-        // --- AKHIR KODE DEBUGGING ---
 
         if ($start && $end) {
             $data['absensi'] = $this->Absensi_model->get_filtered($start, $end);

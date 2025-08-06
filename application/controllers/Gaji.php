@@ -1,17 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-/**
- * @property CI_Input $input
- * @property Gaji_model $Gaji_model
- * @property Karyawan_model $Karyawan_model
- * @property Absensi_model $Absensi_model
- * @property Lembur_model $Lembur_model
- * @property CI_Session $session
- * @property CI_DB_query_builder $db
- */
 class Gaji extends CI_Controller {
 
+    // ... (fungsi __construct, edit, update tidak perlu diubah) ...
+    
     public function __construct()
     {
         parent::__construct();
@@ -23,16 +16,34 @@ class Gaji extends CI_Controller {
         $this->load->database();
     }
 
+    /**
+     * PERBAIKAN LOGIKA INDEX
+     * Fungsi ini akan mengecek apakah data ada. Jika tidak, akan memberi pesan khusus.
+     */
     public function index()
     {
-        $data['title'] = 'Rekap Gaji';
+        $data['title'] = 'Rekap Gaji Karyawan';
         $start_date = $this->input->get('start_date');
         $end_date = $this->input->get('end_date');
-        $data['gaji'] = $this->Gaji_model->get_all($start_date, $end_date);
+        
+        // Default: jangan tampilkan data apa pun
+        $data['gaji'] = [];
+
+        // HANYA ambil data dari database JIKA pengguna sudah menekan tombol filter
+        if ($start_date && $end_date) {
+            $data['gaji'] = $this->Gaji_model->get_all($start_date, $end_date);
+            
+            // Cek jika data tetap kosong setelah difilter, untuk memberi pesan cerdas
+            if (empty($data['gaji'])) {
+                $this->session->set_flashdata('rekap_needed', 'Data untuk periode yang Anda pilih belum dibuat.');
+            }
+        }
+
         $data['content'] = 'gaji/index';
         $this->load->view('layouts/main', $data);
     }
-
+    
+    // ... (fungsi edit dan update tetap sama) ...
     public function edit($id)
     {
         $data['title'] = 'Edit Gaji Karyawan';
@@ -51,11 +62,10 @@ class Gaji extends CI_Controller {
         
         $data['gaji'] = $gaji_record;
         $data['absen'] = $absen_summary;
-
         $data['content'] = 'gaji/edit';
         $this->load->view('layouts/main', $data);
     }
-
+    
     public function update()
     {
         $id = $this->input->post('id');
@@ -66,10 +76,10 @@ class Gaji extends CI_Controller {
             redirect('gaji');
         }
 
-        $insentif = str_replace('.', '', $this->input->post('insentif'));
-        $total_tambahan = str_replace('.', '', $this->input->post('total_tambahan'));
-        $total_potongan = str_replace('.', '', $this->input->post('total_potongan'));
-        $gaji_pokok = $gaji_record->gaji_pokok;
+        $insentif = (int) str_replace('.', '', $this->input->post('insentif'));
+        $total_tambahan = (int) str_replace('.', '', $this->input->post('total_tambahan'));
+        $total_potongan = (int) str_replace('.', '', $this->input->post('total_potongan'));
+        $gaji_pokok = (int) $gaji_record->gaji_pokok;
 
         $total_gaji = $gaji_pokok + $total_tambahan + $insentif - $total_potongan;
 
@@ -82,75 +92,77 @@ class Gaji extends CI_Controller {
 
         $this->Gaji_model->update($id, $data);
         $this->session->set_flashdata('success', 'Data gaji berhasil diperbarui.');
-        redirect('gaji');
+        redirect('gaji?start_date='.$gaji_record->bulan.'-01&end_date='.$gaji_record->bulan.'-28');
     }
 
-    public function rekap_otomatis($tahun = null, $bulan = null)
+    /**
+     * FUNGSI REKAP OTOMATIS (sudah benar dari sebelumnya)
+     */
+    public function rekap_otomatis()
     {
-        $tahun = $tahun ?? date('Y');
-        $bulan = $bulan ?? date('m');
-        
-        $start_date = $tahun . '-' . $bulan . '-01';
-        $end_date = date('Y-m-t', strtotime($start_date));
-        $bulan_rekap = date('Y-m', strtotime($end_date));
+        $start_date_input = $this->input->get('start_date');
+        $end_date_input = $this->input->get('end_date');
+
+        if (empty($start_date_input) || empty($end_date_input)) {
+            $this->session->set_flashdata('error', 'Silakan pilih rentang tanggal terlebih dahulu.');
+            redirect('gaji');
+            return;
+        }
+
+        $start    = (new DateTime($start_date_input))->modify('first day of this month');
+        $end      = (new DateTime($end_date_input))->modify('first day of this month');
+        $interval = DateInterval::createFromDateString('1 month');
+        $period   = new DatePeriod($start, $interval, $end->modify('+1 day'));
 
         $users = $this->Karyawan_model->get_all();
+        $bulan_diproses = [];
 
-        foreach ($users as $user) {
-            $karyawan_id = $user->id;
-            $nama = $user->nama;
-            $jabatan = $user->jabatan;
+        foreach ($period as $dt) {
+            $tahun = $dt->format('Y');
+            $bulan = $dt->format('m');
+            $bulan_rekap = $dt->format('Y-m');
+            $bulan_diproses[] = date('F Y', strtotime($bulan_rekap));
 
-            $absen = $this->Absensi_model->get_summary($karyawan_id, $start_date, $end_date);
-            $izin  = isset($absen->total_izin) ? $absen->total_izin : 0;
-            $sakit = isset($absen->total_sakit) ? $absen->total_sakit : 0;
-            $telat = isset($absen->total_telat) ? $absen->total_telat : 0;
+            $start_date_rekap = $tahun . '-' . $bulan . '-01';
+            $end_date_rekap = date('Y-m-t', strtotime($start_date_rekap));
 
-            $lembur = $this->Lembur_model->get_total_tambahan($karyawan_id, $start_date, $end_date);
-            $total_tambahan = isset($lembur) ? $lembur : 0;
+            foreach ($users as $user) {
+                $karyawan_id = $user->karyawan_id; 
+                
+                $absen = $this->Absensi_model->get_summary($karyawan_id, $start_date_rekap, $end_date_rekap);
+                $izin  = $absen->total_izin ?? 0;
+                $sakit = $absen->total_sakit ?? 0;
+                $telat = $absen->total_telat ?? 0;
 
-            $potongan_absen = ($telat * 50000) + ($izin * 100000);
-            $insentif = 0;
-            $gaji_pokok = $user->gaji_pokok;
-            $total_potongan = $potongan_absen;
-            $total_gaji = $gaji_pokok + $insentif + $total_tambahan - $total_potongan;
+                $lembur = $this->Lembur_model->get_total_tambahan($karyawan_id, $start_date_rekap, $end_date_rekap);
+                $total_tambahan = $lembur ?? 0;
 
-            $existing_gaji = $this->Gaji_model->check_existing($karyawan_id, $bulan_rekap);
-            if ($existing_gaji) {
-                 $this->Gaji_model->update($existing_gaji->id, [
-                    'nama' => $nama,
-                    'jabatan' => $jabatan,
-                    'total_izin' => $izin,
-                    'sakit' => $sakit,
-                    'total_telat' => $telat,
-                    'insentif' => $insentif,
-                    'total_tambahan' => $total_tambahan,
-                    'potongan_absen' => $potongan_absen,
-                    'total_potongan' => $total_potongan,
-                    'gaji_pokok' => $gaji_pokok,
-                    'total_gaji' => $total_gaji,
-                ]);
-            } else {
-                 $this->Gaji_model->simpan([
-                    'karyawan_id' => $karyawan_id,
-                    'nama' => $nama,
-                    'jabatan' => $jabatan,
-                    'bulan' => $bulan_rekap,
-                    'total_izin' => $izin,
-                    'sakit' => $sakit,
-                    'total_telat' => $telat,
-                    'insentif' => $insentif,
-                    'total_tambahan' => $total_tambahan,
-                    'potongan_absen' => $potongan_absen,
-                    'total_potongan' => $total_potongan,
-                    'gaji_pokok' => $gaji_pokok,
-                    'total_gaji' => $total_gaji,
-                    'tanggal_dibuat' => date('Y-m-d H:i:s'),
-                ]);
+                $potongan_absen = ($telat * 50000) + ($izin * 100000);
+                
+                $insentif = 0;
+                $gaji_pokok = $user->gaji_pokok;
+                $total_potongan = $potongan_absen;
+                $total_gaji = $gaji_pokok + $insentif + $total_tambahan - $total_potongan;
+
+                $existing_gaji = $this->Gaji_model->check_existing($karyawan_id, $bulan_rekap);
+                
+                $data_gaji = [
+                    'karyawan_id' => $karyawan_id, 'bulan' => $bulan_rekap, 'total_izin' => $izin, 
+                    'sakit' => $sakit, 'total_telat' => $telat, 'insentif' => $insentif, 
+                    'total_tambahan' => $total_tambahan, 'potongan_absen' => $potongan_absen, 
+                    'total_potongan' => $total_potongan, 'gaji_pokok' => $gaji_pokok, 'total_gaji' => $total_gaji,
+                ];
+
+                if ($existing_gaji) {
+                    $this->Gaji_model->update($existing_gaji->id, $data_gaji);
+                } else {
+                    $data_gaji['tanggal_dibuat'] = date('Y-m-d H:i:s');
+                    $this->Gaji_model->simpan($data_gaji);
+                }
             }
         }
 
-        $this->session->set_flashdata('success', 'Rekap gaji otomatis berhasil.');
-        redirect('gaji');
+        $this->session->set_flashdata('success', 'Rekap gaji untuk bulan ' . implode(', ', $bulan_diproses) . ' berhasil dibuat/diperbarui.');
+        redirect('gaji?start_date=' . $start_date_input . '&end_date=' . $end_date_input);
     }
 }

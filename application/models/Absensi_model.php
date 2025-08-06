@@ -11,14 +11,11 @@ class Absensi_model extends CI_Model
         $this->load->database();
     }
     
-    
-    // Memasukkan banyak data sekaligus ke tabel absensi
     public function insert_batch($data)
     {
         return $this->db->insert_batch($this->table, $data);
     }
     
-    // Mengecek apakah data absensi untuk karyawan dan tanggal tertentu sudah ada
     public function is_exist($karyawan_id, $tanggal)
     {
         return $this->db
@@ -28,68 +25,52 @@ class Absensi_model extends CI_Model
             ->num_rows() > 0;
     }
 
-    // Mengambil semua data absensi dengan join ke tabel karyawan
     public function get_all()
     {
-        return $this->db->select('absensi.*, karyawan.nama')
-                        ->from('absensi')
-                        // Perbaikan: Gunakan 'karyawan.id' di sini untuk JOIN
-                        ->join('karyawan', 'absensi.karyawan_id = karyawan.id', 'left')
-                        ->order_by('tanggal', 'DESC')
-                        ->get()
-                        ->result();
-    }
-    
-    // Mengambil data absensi dengan filter tanggal
-    public function get_filtered($start, $end)
-    {
-        return $this->db->select('absensi.*, karyawan.nama')
-                        ->from('absensi')
-                        // Perbaikan: Gunakan 'karyawan.id' di sini untuk JOIN
-                        ->join('karyawan', 'absensi.karyawan_id = karyawan.id', 'left')
-                        ->where('tanggal >=', $start)
-                        ->where('tanggal <=', $end)
-                        ->order_by('tanggal', 'DESC')
-                        ->get()
-                        ->result();
+        $this->db->select('absensi.*, karyawan.nama');
+        $this->db->from('absensi');
+        // PERBAIKAN: Menggunakan nama tabel `karyawan`
+        $this->db->join('karyawan', 'karyawan.karyawan_id = absensi.karyawan_id', 'left');
+        $this->db->order_by('tanggal', 'DESC');
+        return $this->db->get()->result();
     }
 
-    // Menghitung rekap absensi bulanan
+    public function get_filtered($start, $end)
+    {
+        $this->db->select('absensi.*, karyawan.nama');
+        $this->db->from('absensi');
+        // PERBAIKAN: Menggunakan nama tabel `karyawan`
+        $this->db->join('karyawan', 'karyawan.karyawan_id = absensi.karyawan_id', 'left');
+        $this->db->where('tanggal >=', $start);
+        $this->db->where('tanggal <=', $end);
+        $this->db->order_by('tanggal', 'DESC');
+        return $this->db->get()->result();
+    }
+
     public function rekap_bulanan($karyawan_id, $bulan)
     {
         $this->db->select('status');
         $this->db->from('absensi');
         $this->db->where('karyawan_id', $karyawan_id);
         $this->db->like('tanggal', $bulan);
-
         $result = $this->db->get()->result();
 
-        $hadir = 0;
-        $izin = 0;
-        $telat = 0;
-        $sakit = 0;
+        $rekap = (object) [
+            'total_hadir' => 0,
+            'total_izin' => 0,
+            'total_telat' => 0,
+            'total_sakit' => 0,
+        ];
 
         foreach ($result as $row) {
-            if ($row->status == 'hadir') {
-                $hadir++;
-            } elseif ($row->status == 'izin') {
-                $izin++;
-            } elseif ($row->status == 'sakit') {
-                $sakit++;
-            } elseif ($row->status == 'telat') {
-                $telat++;
-            }
+            if ($row->status == 'hadir') $rekap->total_hadir++;
+            elseif ($row->status == 'izin') $rekap->total_izin++;
+            elseif ($row->status == 'sakit') $rekap->total_sakit++;
+            elseif ($row->status == 'telat') $rekap->total_telat++;
         }
-
-        return (object) [
-            'total_hadir' => $hadir,
-            'total_izin' => $izin,
-            'total_telat' => $telat,
-            'total_sakit' => $sakit,
-        ];
+        return $rekap;
     }
     
-    // Menghitung rekap absensi berdasarkan rentang tanggal
     public function rekap_range($karyawan_id, $start, $end)
     {
         $this->db->where('karyawan_id', $karyawan_id);
@@ -99,16 +80,13 @@ class Absensi_model extends CI_Model
 
         $hasil = ['hadir' => 0, 'telat' => 0, 'izin' => 0, 'sakit' => 0];
         foreach ($query as $row) {
-            if ($row->status == 'hadir') $hasil['hadir']++;
-            elseif ($row->status == 'telat') $hasil['telat']++;
-            elseif ($row->status == 'izin') $hasil['izin']++;
-            elseif ($row->status == 'sakit') $hasil['sakit']++;
+            if (isset($hasil[$row->status])) {
+                $hasil[$row->status]++;
+            }
         }
-
         return (object) $hasil;
     }
 
-    // Mengambil ringkasan data absensi (izin, sakit, telat)
     public function get_summary($karyawan_id, $start_date, $end_date)
     {
         $this->db->select('
